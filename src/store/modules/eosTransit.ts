@@ -12,6 +12,14 @@ import {
   WalletState
 } from 'eos-transit'
 import scatter from 'eos-transit-scatter-provider'
+import lynx from 'eos-transit-lynx-provider'
+import ledger from 'eos-transit-ledger-provider'
+import tp from 'eos-transit-tokenpocket-provider'
+import meetone from 'eos-transit-meetone-provider'
+import whalevault from 'eos-transit-whalevault-provider'
+import keycat from 'eos-transit-keycat-provider'
+import simpleos from 'eos-transit-simpleos-provider'
+import portisProvider from 'eos-transit-portis-provider'
 
 @Module({ namespacedPath: 'eosTransit/' })
 export class EosTransitModule extends VuexModule {
@@ -31,12 +39,23 @@ export class EosTransitModule extends VuexModule {
       chainId:
         'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
     },
-    walletProviders: [scatter()]
+    walletProviders: [
+      scatter(),
+      lynx(),
+      ledger(),
+      tp(),
+      meetone(),
+      whalevault(),
+      keycat(),
+      simpleos(),
+      portisProvider({ DappId: 'bb21112c-af76-4c95-96e7-0a9d8ba30206' })
+    ]
   })
 
   // We're all set now and can get the list of available wallet providers
   // (we only have Scatter provider configured, so there will be only one):
-  @getter walletProviders = this.accessContext.getWalletProviders()
+  @getter
+  walletProviders: WalletProvider[] = this.accessContext.getWalletProviders()
   /* [{
    *   id: 'scatter',
    *   meta: {
@@ -72,6 +91,31 @@ export class EosTransitModule extends VuexModule {
     else return login
   }
 
+  get loginError() {
+    let error = {
+      error: false,
+      errorMsg: ''
+    }
+    if (!this.wallet && !this.walletState) return error
+    else if (
+      this.walletState &&
+      this.walletState.authenticationError &&
+      this.walletState.authenticationErrorMessage
+    ) {
+      error.error = true
+      error.errorMsg = this.walletState.authenticationErrorMessage
+      return error
+    } else if (
+      this.walletState &&
+      this.walletState.connectionError &&
+      this.walletState.connectionErrorMessage
+    ) {
+      error.error = true
+      error.errorMsg = this.walletState.connectionErrorMessage
+      return error
+    } else return error
+  }
+
   // actions
   @action async initLogin(provider: WalletProvider) {
     // We set the selected provider state
@@ -86,21 +130,30 @@ export class EosTransitModule extends VuexModule {
     })
 
     // Now we have an instance of `wallet` that is tracked by our `accessContext`.
-    await wallet.connect()
-    // wallet.connected === true
+    try {
+      await wallet.connect()
+      // wallet.connected === true
 
-    // Now that we are connected, lets authenticate (in case of a Scatter app,
-    // it does it right after connection, so this is more for the state tracking
-    // and for WAL to fetch the EOS account data for us)
-    await wallet.login()
-    // wallet.authenticated === true
+      // Now that we are connected, lets authenticate (in case of a Scatter app,
+      // it does it right after connection, so this is more for the state tracking
+      // and for WAL to fetch the EOS account data for us)
+      try {
+        await wallet.login()
+        // wallet.authenticated === true
 
-    this.setWallet(wallet)
+        this.setWallet(wallet)
 
-    // Now that we have a wallet that is connected, logged in and have account data available,
-    // you can use it to sign transactions using the `eosjs` API instance that is automatically
-    // created and maintained by the wallet.
-    return
+        // Now that we have a wallet that is connected, logged in and have account data available,
+        // you can use it to sign transactions using the `eosjs` API instance that is automatically
+        // created and maintained by the wallet.
+      } catch (e) {
+        console.log('auth error')
+        throw e
+      }
+    } catch (e) {
+      console.log('connection error')
+      throw e
+    }
   }
 
   @action async logout() {
