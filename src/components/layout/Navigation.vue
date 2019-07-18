@@ -70,9 +70,10 @@ export default class Navigation extends Vue {
 
   // methods
   async loginAction() {
-    if (this.loginStatus[0] === 'Login')
-      vxm.eosTransit.initLogin(vxm.eosTransit.walletProviders[0])
-    else if (
+    if (this.loginStatus[0] === 'Login') {
+      this.$bvModal.show('modal-login')
+      // vxm.eosTransit.initLogin(vxm.eosTransit.walletProviders[0])
+    } else if (
       this.loginStatus[0] !== 'Authenticating' &&
       this.loginStatus[0] !== 'Connecting' &&
       this.loginStatus[0] !== 'Fetching'
