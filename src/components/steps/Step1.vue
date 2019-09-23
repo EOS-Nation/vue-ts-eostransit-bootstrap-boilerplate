@@ -1,41 +1,53 @@
 <template>
-  <div>
-    <h2>Step 1</h2>
-    <h3>Proxy</h3>
-    <p>Vote for our Proxy: {{ proxy }}</p>
-  </div>
+  <step-ui :step="1" title="Proxy">
+    <template v-if="proxy === true">
+      <p>All set, you are voting for our proxy:</p>
+      <p>proxy4nation</p>
+    </template>
+    <template v-else>
+      <p>Currently you are NOT voting for our proxy!</p>
+      <p v-if="proxy">Your Proxy is: {{ proxy }}</p>
+      <b-btn @click="vote()" variant="primary" :disabled="loading">
+        <font-awesome-icon
+          v-if="!loading"
+          icon="vote-yea"
+          fixed-width
+          class="mr-1"
+        />
+        <font-awesome-icon
+          v-else
+          icon="spinner"
+          spin
+          fixed-width
+          class="mr-1"
+        />
+        Vote for us
+      </b-btn>
+    </template>
+  </step-ui>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { vxm } from '@/store/'
-
-@Component
+import StepUi from '@/components/steps/StepUi.vue'
+@Component({
+  components: { StepUi }
+})
 export default class Step1 extends Vue {
-  @Prop() private msg!: string
+  voteResp: any = false
+  loading = false
 
   get proxy() {
     return vxm.core.userProxy
   }
 
-  get language() {
-    return vxm.core.language
-  }
-
-  set language(lang: string) {
-    vxm.core.setLanguage(lang)
+  async vote() {
+    this.loading = true
+    this.voteResp = await vxm.core.vote()
+    this.loading = false
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 10px;
-}
-</style>
+<style scoped lang="scss"></style>
