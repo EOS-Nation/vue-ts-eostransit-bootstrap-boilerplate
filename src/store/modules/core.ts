@@ -77,9 +77,11 @@ export class CoreModule extends VuexModule {
 
   @action async claim() {
     const wallet = vxm.eosTransit.wallet
-    if (wallet && wallet.auth)
-      wallet.eosApi
-        .transact(
+    let resp: any
+    if (wallet && wallet.auth) {
+      const user = wallet.auth.accountName
+      try {
+        resp = await wallet.eosApi.transact(
           {
             actions: [
               {
@@ -103,8 +105,11 @@ export class CoreModule extends VuexModule {
             expireSeconds: 60
           }
         )
-        .then((resp: any) => {})
-        .catch((error: any) => {})
+      } catch (e) {
+        resp = e
+      }
+    }
+    return resp
   }
   @action async vote() {
     const wallet = vxm.eosTransit.wallet
