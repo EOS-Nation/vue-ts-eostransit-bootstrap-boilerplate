@@ -91,6 +91,11 @@ export class EosTransitModule extends VuexModule {
     else return login
   }
 
+  get isAuthenticated(): string | false {
+    if (this.wallet && this.wallet.auth) return this.wallet.auth.accountName
+    else return false
+  }
+
   get loginError() {
     let error = {
       error: false,
