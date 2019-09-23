@@ -1,11 +1,7 @@
 <template>
   <b-container>
     <navigation />
-    <b-row>
-      <b-col>
-        <router-view />
-      </b-col>
-    </b-row>
+    <router-view />
     <modal-login />
   </b-container>
 </template>

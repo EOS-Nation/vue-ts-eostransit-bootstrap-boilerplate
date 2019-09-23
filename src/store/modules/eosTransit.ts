@@ -9,7 +9,8 @@ import {
   initAccessContext,
   WalletProvider,
   Wallet,
-  WalletState
+  WalletState,
+  AccountInfo
 } from 'eos-transit'
 import scatter from 'eos-transit-scatter-provider'
 import lynx from 'eos-transit-lynx-provider'
@@ -20,9 +21,12 @@ import whalevault from 'eos-transit-whalevault-provider'
 import keycat from 'eos-transit-keycat-provider'
 import simpleos from 'eos-transit-simpleos-provider'
 import portisProvider from 'eos-transit-portis-provider'
+import {vxm} from "@/store";
 
 @Module({ namespacedPath: 'eosTransit/' })
 export class EosTransitModule extends VuexModule {
+  @getter userInfo?: AccountInfo
+
   // We need to initialize the so called "access context" first,
   // passing it our dapp name, network configuration and
   // providers we want to make available to the dapp.
@@ -91,6 +95,11 @@ export class EosTransitModule extends VuexModule {
     else return login
   }
 
+  get isAuthenticated(): string | false {
+    if (this.wallet && this.wallet.auth) return this.wallet.auth.accountName
+    else return false
+  }
+
   get loginError() {
     let error = {
       error: false,
@@ -142,7 +151,8 @@ export class EosTransitModule extends VuexModule {
         // wallet.authenticated === true
 
         this.setWallet(wallet)
-
+        if (wallet.accountInfo) this.setUserInfo(wallet.accountInfo)
+        await vxm.core.checkSignup()
         // Now that we have a wallet that is connected, logged in and have account data available,
         // you can use it to sign transactions using the `eosjs` API instance that is automatically
         // created and maintained by the wallet.
@@ -165,6 +175,7 @@ export class EosTransitModule extends VuexModule {
       this.setWallet(false)
       this.setWalletState(false)
       localStorage.removeItem('autoLogin')
+      vxm.core.setUserSigned(false)
     }
   }
 
@@ -179,6 +190,10 @@ export class EosTransitModule extends VuexModule {
 
   @mutation setWalletState(state: WalletState | false) {
     this.walletState = state
+  }
+
+  @mutation setUserInfo(u: AccountInfo) {
+    this.userInfo = u
   }
 }
 export const eosTransit = EosTransitModule.ExtractVuexModule(EosTransitModule)
