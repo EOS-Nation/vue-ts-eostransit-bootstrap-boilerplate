@@ -1,47 +1,34 @@
 <template>
-  <b-row>
-    <b-col>
-      <b-navbar
-        toggleable="lg"
-        type="dark"
-        variant="primary"
-        class="rounded my-3"
-      >
-        <b-navbar-brand :to="{ name: 'home' }">
+  <header id="page-header">
+    <!-- Header Content -->
+    <div class="content-header">
+      <!-- Left Section -->
+      <div>
+        <span class="text-white font-w700 mr-2">
           <font-awesome-icon icon="heart" fixed-width />
-          EOS Web Boilerplate
-        </b-navbar-brand>
+          EOS Nation Proxy Portal
+        </span>
+        <b-btn variant="primary" :to="{ name: 'home' }" class="mr-2" exact>
+          <font-awesome-icon icon="coins" fixed-width />
+          Claim
+        </b-btn>
+        <b-btn variant="primary" :to="{ name: 'voters' }" exact>
+          <font-awesome-icon icon="vote-yea" fixed-width />
+          Voters
+        </b-btn>
+      </div>
+      <!-- END Left Section -->
 
-        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
-        <b-collapse id="nav-collapse" is-nav>
-          <b-navbar-nav>
-            <b-nav-item :to="{ name: 'home' }" exact>Home</b-nav-item>
-            <b-nav-item :to="{ name: 'about' }" exact>About</b-nav-item>
-            <b-nav-item-dropdown :text="language.toUpperCase()" right>
-              <b-dropdown-item
-                @click="language = 'en'"
-                :active="language === 'en'"
-                >English</b-dropdown-item
-              >
-              <b-dropdown-item
-                @click="language = 'de'"
-                :active="language === 'de'"
-                >Deutsch</b-dropdown-item
-              >
-            </b-nav-item-dropdown>
-          </b-navbar-nav>
-
-          <!-- Right aligned nav items -->
-          <b-navbar-nav class="ml-auto">
-            <b-nav-item @click="loginAction()">
-              <eos-transit />
-            </b-nav-item>
-          </b-navbar-nav>
-        </b-collapse>
-      </b-navbar>
-    </b-col>
-  </b-row>
+      <!-- Right Section -->
+      <div>
+        <b-btn @click="loginAction()" variant="primary">
+          <eos-transit />
+        </b-btn>
+      </div>
+      <!-- END Right Section -->
+    </div>
+    <!-- END Header Content -->
+  </header>
 </template>
 
 <script lang="ts">
