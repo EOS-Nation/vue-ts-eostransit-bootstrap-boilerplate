@@ -1,6 +1,11 @@
 <template>
   <step-ui :step="2" title="Signup">
     <template v-if="userSigned">
+      <font-awesome-icon
+        icon="check-double"
+        fixed-width
+        class="fa-3x text-success mb-3"
+      />
       <p>Cool, you are signed up and ready to claim!</p>
     </template>
     <template v-else>

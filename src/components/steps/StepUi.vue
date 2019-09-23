@@ -1,8 +1,14 @@
 <template>
-  <div>
-    <h2>Step {{ step }}</h2>
-    <h3>{{ title }}</h3>
-    <slot></slot>
+  <div class="block block-rounded">
+    <div class="block-header">
+      <h3 class="block-title">
+        Step {{ step }} <small>{{ title }}</small>
+      </h3>
+    </div>
+    <div class="block-content text-center pb-3">
+      <slot></slot>
+      <slot name="button"></slot>
+    </div>
   </div>
 </template>
 
