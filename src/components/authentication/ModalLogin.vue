@@ -4,7 +4,11 @@
       Select Wallet Provider
     </template>
     <transition name="slide-fade" mode="out-in">
-      <b-row v-if="!loading && !error" key="select" class="d-flex align-items-center">
+      <b-row
+        v-if="!loading && !error"
+        key="select"
+        class="d-flex align-items-center"
+      >
         <b-col
           md="6"
           v-for="provider in walletProviders"
