@@ -25,6 +25,7 @@ import { vxm } from '@/store/'
 export default class App extends Vue {
   created() {
     vxm.core.setLanguage()
+    vxm.core.getVoters()
   }
 }
 </script>
