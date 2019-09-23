@@ -1,12 +1,19 @@
 <template>
   <step-ui :step="1" title="Proxy">
     <template v-if="proxy === true">
+      <font-awesome-icon
+        icon="check-double"
+        fixed-width
+        class="fa-3x text-success mb-3"
+      />
       <p>All set, you are voting for our proxy:</p>
       <p>proxy4nation</p>
     </template>
     <template v-else>
       <p>Currently you are NOT voting for our proxy!</p>
       <p v-if="proxy">Your Proxy is: {{ proxy }}</p>
+    </template>
+    <template v-if="proxy !== true" v-slot:button>
       <b-btn @click="vote()" variant="primary" :disabled="loading">
         <font-awesome-icon
           v-if="!loading"

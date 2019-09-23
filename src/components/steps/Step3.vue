@@ -1,16 +1,28 @@
 <template>
   <step-ui :step="3" title="Claim">
     <p>Claim your Tokens every 24h!</p>
-    <b-btn @click="claim()" variant="primary" :disabled="loading">
-      <font-awesome-icon
-        v-if="!loading"
-        icon="coins"
-        fixed-width
-        class="mr-1"
-      />
-      <font-awesome-icon v-else icon="spinner" spin fixed-width class="mr-1" />
-      Claim
-    </b-btn>
+    <div v-if="userSigned">
+      <p>Next Claim Period:</p>
+      <pre>{{ userSigned.next_claim_period }}</pre>
+    </div>
+    <template v-slot:button>
+      <b-btn @click="claim()" variant="primary" :disabled="loading">
+        <font-awesome-icon
+          v-if="!loading"
+          icon="coins"
+          fixed-width
+          class="mr-1"
+        />
+        <font-awesome-icon
+          v-else
+          icon="spinner"
+          spin
+          fixed-width
+          class="mr-1"
+        />
+        Claim
+      </b-btn>
+    </template>
   </step-ui>
 </template>
 
@@ -26,7 +38,7 @@ export default class Step3 extends Vue {
   claimResp: any = false
 
   get userSigned() {
-    return vxm.core.userSigned
+    return vxm.core.userSignedUp
   }
 
   async claim() {

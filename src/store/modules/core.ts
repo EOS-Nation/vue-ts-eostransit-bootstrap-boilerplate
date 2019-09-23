@@ -29,18 +29,6 @@ export class CoreModule extends VuexModule {
     }
   }
 
-  get userSigned() {
-    const isAuthenticated = vxm.eosTransit.isAuthenticated
-    if (!isAuthenticated) return false
-    else {
-      const user = this.voters.find((u: VotersTable) => {
-        return u.owner === isAuthenticated
-      })
-      if (user) return user
-      else return false
-    }
-  }
-
   @action async getVoters() {
     let table: VotersTable[] = []
     let more = true
@@ -105,6 +93,7 @@ export class CoreModule extends VuexModule {
             expireSeconds: 60
           }
         )
+        this.checkSignup()
       } catch (e) {
         resp = e
       }
