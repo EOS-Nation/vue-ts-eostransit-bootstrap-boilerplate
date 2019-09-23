@@ -1,6 +1,16 @@
 <template>
   <step-ui :step="3" title="Claim">
-    <b-btn @click="claim()" variant="primary">CLAIM</b-btn>
+    <p>Claim your Tokens every 24h!</p>
+    <b-btn @click="claim()" variant="primary" :disabled="loading">
+      <font-awesome-icon
+        v-if="!loading"
+        icon="coins"
+        fixed-width
+        class="mr-1"
+      />
+      <font-awesome-icon v-else icon="spinner" spin fixed-width class="mr-1" />
+      Claim
+    </b-btn>
   </step-ui>
 </template>
 
@@ -12,12 +22,17 @@ import StepUi from '@/components/steps/StepUi.vue'
   components: { StepUi }
 })
 export default class Step3 extends Vue {
+  loading = false
+  claimResp: any = false
+
   get userSigned() {
     return vxm.core.userSigned
   }
 
-  claim() {
-    vxm.core.claim()
+  async claim() {
+    this.loading = true
+    this.claimResp = await vxm.core.claim()
+    this.loading = false
   }
 }
 </script>
