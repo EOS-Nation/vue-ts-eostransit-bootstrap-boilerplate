@@ -11,6 +11,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import Navigation from '@/components/layout/Navigation.vue'
 import ModalLogin from '@/components/authentication/ModalLogin.vue'
 import { vxm } from '@/store/'
+import { WalletProvider } from 'eos-transit'
 
 @Component({
   components: {
@@ -20,6 +21,13 @@ import { vxm } from '@/store/'
 })
 export default class App extends Vue {
   created() {
+    const autoLogin = localStorage.getItem('autoLogin')
+    if (autoLogin) {
+      const provider = vxm.eosTransit.walletProviders.find(
+        (p: WalletProvider) => p.id === autoLogin
+      )
+      if (provider) vxm.eosTransit.initLogin(provider)
+    }
     vxm.core.setLanguage()
   }
 }

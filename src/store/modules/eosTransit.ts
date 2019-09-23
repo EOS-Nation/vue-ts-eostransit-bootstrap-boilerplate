@@ -156,6 +156,9 @@ export class EosTransitModule extends VuexModule {
         // Now that we have a wallet that is connected, logged in and have account data available,
         // you can use it to sign transactions using the `eosjs` API instance that is automatically
         // created and maintained by the wallet.
+
+        // set autologin
+        localStorage.setItem('autoLogin', provider.id)
       } catch (e) {
         console.log('auth error')
         throw e
@@ -171,6 +174,7 @@ export class EosTransitModule extends VuexModule {
       this.wallet.logout()
       this.setWallet(false)
       this.setWalletState(false)
+      localStorage.removeItem('autoLogin')
       vxm.core.setUserSigned(false)
     }
   }
