@@ -1,11 +1,11 @@
 <template>
   <step-ui :step="2" title="Signup">
     <template v-if="userSigned">
-      <p>done</p>
+      <p>Cool, you are signed up and ready to claim!</p>
     </template>
     <template v-else>
       <p>Please signup first before you can claim your rewards.</p>
-      <b-btn @click="signup()" variant="primary">
+      <b-btn @click="signup()" variant="primary" :disabled="loading">
         <font-awesome-icon
           v-if="!loading"
           icon="user-plus"
