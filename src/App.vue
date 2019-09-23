@@ -1,11 +1,7 @@
 <template>
   <b-container>
     <navigation />
-    <b-row>
-      <b-col>
-        <router-view />
-      </b-col>
-    </b-row>
+    <router-view />
     <modal-login />
   </b-container>
 </template>
@@ -25,7 +21,6 @@ import { vxm } from '@/store/'
 export default class App extends Vue {
   created() {
     vxm.core.setLanguage()
-    vxm.core.getVoters()
   }
 }
 </script>
