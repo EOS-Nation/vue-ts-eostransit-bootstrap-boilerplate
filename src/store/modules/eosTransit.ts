@@ -21,7 +21,7 @@ import whalevault from 'eos-transit-whalevault-provider'
 import keycat from 'eos-transit-keycat-provider'
 import simpleos from 'eos-transit-simpleos-provider'
 import portisProvider from 'eos-transit-portis-provider'
-import {vxm} from "@/store";
+import { vxm } from '@/store'
 
 @Module({ namespacedPath: 'eosTransit/' })
 export class EosTransitModule extends VuexModule {
