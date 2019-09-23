@@ -1,9 +1,20 @@
 <template>
-  <b-container>
+  <div
+    id="page-container"
+    class="page-header-fixed page-header-dark main-content-narrow"
+  >
     <navigation />
-    <router-view />
+    <!-- Main Container -->
+    <main id="main-container">
+      <!-- Page Content -->
+      <div class="content">
+        <router-view />
+      </div>
+      <!-- END Main Content -->
+    </main>
+    <!-- END Page Content -->
     <modal-login />
-  </b-container>
+  </div>
 </template>
 
 <script lang="ts">
