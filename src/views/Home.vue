@@ -1,5 +1,5 @@
 <template>
-  <b-row>
+  <b-row class="row-deck">
     <b-col md="4"><step1 /></b-col>
     <b-col md="4"><step2 /></b-col>
     <b-col md="4"><step3 /></b-col>
