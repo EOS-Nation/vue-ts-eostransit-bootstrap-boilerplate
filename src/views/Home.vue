@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <step1 />
-    <step2 />
-    <step3 />
-  </div>
+  <b-row>
+    <b-col md="4"><step1 /></b-col>
+    <b-col md="4"><step2 /></b-col>
+    <b-col md="4"><step3 /></b-col>
+  </b-row>
 </template>
 
 <script lang="ts">
