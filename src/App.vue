@@ -1,7 +1,7 @@
 <template>
   <div
     id="page-container"
-    class="page-header-fixed page-header-dark main-content-narrow"
+    class="page-header-fixed page-header-dark main-content-boxed"
   >
     <navigation />
     <!-- Main Container -->
