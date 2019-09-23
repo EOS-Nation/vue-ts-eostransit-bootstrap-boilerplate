@@ -1,29 +1,19 @@
 <template>
-  <div>
-    <h2>Step 3</h2>
-    <h3>Claim</h3>
+  <step-ui :step="3" title="Claim">
     <b-btn @click="claim()" variant="primary">CLAIM</b-btn>
-  </div>
+  </step-ui>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { vxm } from '@/store/'
-
-@Component
+import StepUi from '@/components/steps/StepUi.vue'
+@Component({
+  components: { StepUi }
+})
 export default class Step3 extends Vue {
-  @Prop() private msg!: string
-
   get userSigned() {
     return vxm.core.userSigned
-  }
-
-  get language() {
-    return vxm.core.language
-  }
-
-  set language(lang: string) {
-    vxm.core.setLanguage(lang)
   }
 
   claim() {
@@ -32,14 +22,4 @@ export default class Step3 extends Vue {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 10px;
-}
-</style>
+<style scoped lang="scss"></style>
