@@ -13,6 +13,8 @@ import { vxm } from '@/store'
 export class CoreModule extends VuexModule {
   @getter language: string = 'en'
   @getter voters: VotersTable[] = []
+  @getter userSignedUp: VotersTable | false = false
+
   get userProxy() {
     const isAuthenticated = vxm.eosTransit.isAuthenticated
     if (!isAuthenticated) return false
@@ -60,6 +62,18 @@ export class CoreModule extends VuexModule {
     }
     this.setVoters(table)
   }
+  @action async checkSignup() {
+    const user = vxm.eosTransit.isAuthenticated
+    const resp = await vxm.eosTransit.accessContext.eosRpc.get_table_rows({
+      code: 'proxy4nation',
+      table: 'voters',
+      scope: 'proxy4nation',
+      lower_bound: user,
+      upper_bound: user,
+      limit: 1
+    })
+    if (resp && resp.rows.length) this.setUserSigned(resp.rows[0])
+  }
 
   @action async claim() {
     const wallet = vxm.eosTransit.wallet
@@ -92,11 +106,53 @@ export class CoreModule extends VuexModule {
         .then((resp: any) => {})
         .catch((error: any) => {})
   }
+  @action async vote() {
+    const wallet = vxm.eosTransit.wallet
+    let resp: any
+    if (wallet && wallet.auth) {
+      const user = wallet.auth.accountName
+      try {
+        resp = await wallet.eosApi.transact(
+          {
+            actions: [
+              {
+                account: 'eosio',
+                name: 'voteproducer',
+                authorization: [
+                  {
+                    actor: user,
+                    permission: wallet.auth.permission
+                  }
+                ],
+                data: {
+                  voter: user,
+                  proxy: 'proxy4nation',
+                  producers: []
+                }
+              }
+            ]
+          },
+          {
+            broadcast: true,
+            blocksBehind: 3,
+            expireSeconds: 60
+          }
+        )
+        const userInfo = await wallet.fetchAccountInfo(user)
+        vxm.eosTransit.setUserInfo(userInfo)
+      } catch (e) {
+        resp = e
+      }
+    }
+    return resp
+  }
   @action async signup() {
     const wallet = vxm.eosTransit.wallet
-    if (wallet && wallet.auth)
-      wallet.eosApi
-        .transact(
+    let resp: any
+    if (wallet && wallet.auth) {
+      const user = wallet.auth.accountName
+      try {
+        resp = await wallet.eosApi.transact(
           {
             actions: [
               {
@@ -121,11 +177,19 @@ export class CoreModule extends VuexModule {
             expireSeconds: 60
           }
         )
-        .then((resp: any) => {})
-        .catch((error: any) => {})
+        await this.checkSignup()
+      } catch (e) {
+        resp = e
+      }
+    }
+    return resp
   }
   @mutation setVoters(v: VotersTable[]) {
     this.voters = v
+  }
+
+  @mutation setUserSigned(v: VotersTable | false) {
+    this.userSignedUp = v
   }
 
   // Get / Set Language from Browser/LocaleStorage
