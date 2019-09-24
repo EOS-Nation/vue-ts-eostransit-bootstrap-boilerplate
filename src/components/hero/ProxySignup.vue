@@ -19,9 +19,6 @@
         <font-awesome-icon icon="check-double" class="mx-1" /> Signup
       </b-badge>
     </div>
-    <div v-if="claimResp">
-      <pre>{{ claimResp }}</pre>
-    </div>
     <template v-slot:button>
       <b-btn @click="claim()" variant="primary" :disabled="loading">
         <font-awesome-icon
