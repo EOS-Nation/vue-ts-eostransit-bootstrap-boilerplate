@@ -15,6 +15,14 @@ export class CoreModule extends VuexModule {
   @getter voters: VotersTable[] = []
   @getter userSignedUp: VotersTable | false = false
 
+  get userState() {
+    if (!vxm.eosTransit.isAuthenticated) return 'auth'
+    else if (!this.userProxy || typeof this.userProxy === 'string')
+      return 'proxy'
+    else if (!this.userSignedUp) return 'signup'
+    else return 'claim'
+  }
+
   get userProxy() {
     const isAuthenticated = vxm.eosTransit.isAuthenticated
     if (!isAuthenticated) return false
@@ -63,29 +71,61 @@ export class CoreModule extends VuexModule {
     if (resp && resp.rows.length) this.setUserSigned(resp.rows[0])
   }
 
-  @action async claim() {
+  @action async claim(a: { vote: boolean, signup: boolean, claim: boolean }) {
     const wallet = vxm.eosTransit.wallet
+    const actions: any[] = []
     let resp: any
     if (wallet && wallet.auth) {
       const user = wallet.auth.accountName
+      const claim = {
+        account: 'proxy4nation',
+        name: 'claim',
+        authorization: [
+          {
+            actor: user,
+            permission: wallet.auth.permission
+          }
+        ],
+        data: {
+          owner: user
+        }
+      }
+      const vote = {
+        account: 'eosio',
+        name: 'voteproducer',
+        authorization: [
+          {
+            actor: user,
+            permission: wallet.auth.permission
+          }
+        ],
+        data: {
+          voter: user,
+          proxy: 'proxy4nation',
+          producers: []
+        }
+      }
+      const signup = {
+        account: 'proxy4nation',
+        name: 'signup',
+        authorization: [
+          {
+            actor: user,
+            permission: wallet.auth.permission
+          }
+        ],
+        data: {
+          owner: user,
+          referral: 'eosnationinc'
+        }
+      }
+      if (a.vote) actions.push(vote)
+      if (a.signup) actions.push(signup)
+      if (a.claim) actions.push(claim)
       try {
         resp = await wallet.eosApi.transact(
           {
-            actions: [
-              {
-                account: 'proxy4nation',
-                name: 'claim',
-                authorization: [
-                  {
-                    actor: wallet.auth.accountName,
-                    permission: wallet.auth.permission
-                  }
-                ],
-                data: {
-                  owner: wallet.auth.accountName
-                }
-              }
-            ]
+            actions: actions
           },
           {
             broadcast: true,
@@ -94,6 +134,8 @@ export class CoreModule extends VuexModule {
           }
         )
         this.checkSignup()
+        const userInfo = await wallet.fetchAccountInfo(user)
+        vxm.eosTransit.setUserInfo(userInfo)
       } catch (e) {
         resp = e
       }

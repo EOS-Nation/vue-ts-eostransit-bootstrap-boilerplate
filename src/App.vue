@@ -1,15 +1,13 @@
 <template>
   <div
     id="page-container"
-    class="page-header-fixed page-header-dark main-content-boxed"
+    class="page-header-fixed page-header-glass main-content-boxed"
   >
     <navigation />
     <!-- Main Container -->
     <main id="main-container">
       <!-- Page Content -->
-      <div class="content">
-        <router-view />
-      </div>
+      <router-view />
       <!-- END Main Content -->
     </main>
     <!-- END Page Content -->

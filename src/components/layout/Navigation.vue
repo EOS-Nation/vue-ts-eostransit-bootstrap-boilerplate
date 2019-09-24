@@ -4,24 +4,19 @@
     <div class="content-header">
       <!-- Left Section -->
       <div>
-        <span class="text-white font-w700 mr-2">
-          <font-awesome-icon icon="heart" fixed-width />
-          EOS Nation Proxy Portal
-        </span>
-        <b-btn variant="primary" :to="{ name: 'home' }" class="mr-2" exact>
-          <font-awesome-icon icon="coins" fixed-width />
-          Claim
-        </b-btn>
-        <b-btn variant="primary" :to="{ name: 'voters' }" exact>
-          <font-awesome-icon icon="vote-yea" fixed-width />
-          Voters
-        </b-btn>
+        <a href="https://eosnation.io">
+          <img
+            src="@/assets/img/eosn.png"
+            alt="EOS Nation Logo"
+            height="40px"
+          />
+        </a>
       </div>
       <!-- END Left Section -->
 
       <!-- Right Section -->
       <div>
-        <b-btn @click="loginAction()" variant="primary">
+        <b-btn @click="loginAction()" variant="dark">
           <eos-transit />
         </b-btn>
       </div>
