@@ -16,7 +16,7 @@
         </vue-countdown>
       </h1>
     </template>
-    <b-progress :max="24*60*60" :value="24*60*60 - seconds" animated/>
+    <b-progress :max="24 * 60 * 60" :value="24 * 60 * 60 - seconds" animated />
     <template v-if="seconds < 1" v-slot:button>
       <b-btn @click="claim()" variant="primary" :disabled="loading">
         <font-awesome-icon
@@ -108,7 +108,7 @@ export default class Claim extends Vue {
 </script>
 
 <style scoped lang="scss">
-  h1 {
-    letter-spacing: 10px;
-  }
+h1 {
+  letter-spacing: 10px;
+}
 </style>

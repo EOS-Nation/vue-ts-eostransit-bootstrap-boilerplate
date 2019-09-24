@@ -71,7 +71,7 @@ export class CoreModule extends VuexModule {
     if (resp && resp.rows.length) this.setUserSigned(resp.rows[0])
   }
 
-  @action async claim(a: { vote: boolean, signup: boolean, claim: boolean }) {
+  @action async claim(a: { vote: boolean; signup: boolean; claim: boolean }) {
     const wallet = vxm.eosTransit.wallet
     const actions: any[] = []
     let resp: any

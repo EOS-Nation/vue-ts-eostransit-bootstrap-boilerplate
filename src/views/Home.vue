@@ -18,11 +18,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { vxm } from '@/store'
-import HelloWorld from '@/components/HelloWorld.vue'
 import EosTransit from '@/components/authentication/EosTransit.vue'
-import Step1 from '@/components/steps/Step1.vue'
-import Step2 from '@/components/steps/Step2.vue'
-import Step3 from '@/components/steps/Step3.vue'
 import Welcome from '@/components/hero/Welcome.vue'
 import ProxySignup from '@/components/hero/ProxySignup.vue'
 import Claim from '@/components/hero/Claim.vue' // @ is an alias to /src
@@ -32,10 +28,6 @@ import Claim from '@/components/hero/Claim.vue' // @ is an alias to /src
     Claim,
     ProxySignup,
     Welcome,
-    Step3,
-    Step2,
-    Step1,
-    HelloWorld,
     EosTransit
   }
 })
