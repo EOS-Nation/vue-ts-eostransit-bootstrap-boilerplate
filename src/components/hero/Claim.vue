@@ -1,51 +1,55 @@
 <template>
-  <hero-ui>
-    <template v-slot:headline>
-      <h2 class="font-w300 text-white-75 mb-2">
-        Claim again in
-      </h2>
-      <h1 class="display-4 font-w700 text-white mb-3">
-        <vue-countdown
-          v-if="seconds"
-          @time-expire="handleTimeExpire"
-          :seconds="seconds"
-          :message="'CLAIM NOW'"
-          :start="true"
-          class="text-white"
-        >
-        </vue-countdown>
-      </h1>
-    </template>
-    <b-progress :max="24 * 60 * 60" :value="24 * 60 * 60 - seconds" animated />
-    <template v-if="seconds < 1" v-slot:button>
-      <b-btn @click="claim()" variant="primary" :disabled="loading">
-        <font-awesome-icon
-          v-if="!loading"
-          icon="coins"
-          fixed-width
-          class="mr-1"
-        />
-        <font-awesome-icon
-          v-else
-          icon="spinner"
-          spin
-          fixed-width
-          class="mr-1"
-        />
-        CLAIM
-      </b-btn>
-    </template>
-  </hero-ui>
+  <div>
+    <span class="claimTimer display-4 font-w700 text-white mb-3">
+      <vue-countdown
+        v-if="seconds > 0"
+        @time-expire="handleTimeExpire"
+        :seconds="seconds"
+        :message="'NOW'"
+        :start="true"
+        class="text-white mt-4"
+      >
+      </vue-countdown>
+    </span>
+    <h3 v-if="seconds > 0" class="font-w300 text-white-75 mb-2">
+      Next Claim Period
+    </h3>
+    <b-progress
+      v-if="seconds >= 0"
+      :max="24 * 60 * 60"
+      :value="24 * 60 * 60 - seconds"
+      animated
+      class="my-3"
+    />
+    <b-progress v-else :max="100" :value="100" class="my-3" />
+    <rewards />
+    <b-btn
+      v-if="seconds < 0"
+      @click="claim()"
+      variant="primary"
+      :disabled="loading"
+    >
+      <font-awesome-icon
+        v-if="!loading"
+        icon="coins"
+        fixed-width
+        class="mr-1"
+      />
+      <font-awesome-icon v-else icon="spinner" spin fixed-width class="mr-1" />
+      CLAIM
+    </b-btn>
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { vxm } from '@/store/'
-import HeroUi from '@/components/hero/HeroUi.vue'
 // @ts-ignore
 import VueCountdown from '@dmaksimovic/vue-countdown'
+import ProxyNation from '@/components/layout/ProxyNation.vue'
+import Rewards from '@/components/layout/Rewards.vue'
 @Component({
-  components: { HeroUi, VueCountdown }
+  components: { Rewards, ProxyNation, VueCountdown }
 })
 export default class Claim extends Vue {
   loading = false
@@ -72,6 +76,7 @@ export default class Claim extends Vue {
       signup: false,
       claim: true
     })
+    this.pollData()
     this.loading = false
   }
   handleTimeExpire() {
@@ -108,7 +113,7 @@ export default class Claim extends Vue {
 </script>
 
 <style scoped lang="scss">
-h1 {
+.claimTimer {
   letter-spacing: 10px;
 }
 </style>
