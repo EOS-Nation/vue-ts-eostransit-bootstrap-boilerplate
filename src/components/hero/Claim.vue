@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mt-4">
     <span class="claimTimer display-4 font-w700 text-white mb-3">
       <vue-countdown
         v-if="seconds > 0"
@@ -7,11 +7,11 @@
         :seconds="seconds"
         :message="'NOW'"
         :start="true"
-        class="text-white mt-4"
       >
       </vue-countdown>
+      <font-awesome-icon v-else icon="spinner" spin/>
     </span>
-    <h3 v-if="seconds > 0" class="font-w300 text-white-75 mb-2">
+    <h3 class="font-w300 text-white-75 mb-2">
       Next Claim Period
     </h3>
     <b-progress
