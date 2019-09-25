@@ -9,7 +9,12 @@
         :start="true"
       >
       </vue-countdown>
-      <font-awesome-icon v-else icon="spinner" spin/>
+      <font-awesome-icon
+        v-else-if="seconds === 0 || loading"
+        icon="spinner"
+        spin
+      />
+      <span v-else>CLAIM NOW</span>
     </span>
     <h3 class="font-w300 text-white-75 mb-2">
       Next Claim Period
@@ -24,10 +29,10 @@
     <b-progress v-else :max="100" :value="100" class="my-3" />
     <rewards />
     <b-btn
-      v-if="seconds < 0"
+      :disabled="seconds >= 0 || loading"
       @click="claim()"
-      variant="primary"
-      :disabled="loading"
+      variant="hero-primary"
+      class="mt-4"
     >
       <font-awesome-icon
         v-if="!loading"
@@ -76,11 +81,12 @@ export default class Claim extends Vue {
       signup: false,
       claim: true
     })
+    this.calcSeconds()
     this.pollData()
     this.loading = false
   }
   handleTimeExpire() {
-    this.seconds = 0
+    this.seconds = -1
   }
 
   pollData() {
