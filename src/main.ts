@@ -17,7 +17,7 @@ import {
 import VueAnalytics from 'vue-analytics'
 
 Vue.use(VueAnalytics, {
-  id: 'UA-XXX-X',
+  id: 'UA-138549575-3',
   router,
   debug: {
     sendHitTask: process.env.NODE_ENV === 'production'
