@@ -68,7 +68,9 @@ export default class Home extends Vue {
 }
 </script>
 <style scoped lang="scss">
-.fade-enter-active,
+.fade-enter-active {
+  transition: opacity 2s;
+}
 .fade-leave-active {
   transition: opacity 0.5s;
 }
