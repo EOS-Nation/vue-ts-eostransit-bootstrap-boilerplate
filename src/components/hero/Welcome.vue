@@ -1,7 +1,12 @@
 <template>
   <div>
     <rewards class="my-5" />
-    <b-btn @click="login()" variant="hero-primary" :disabled="loading" class="mt-2">
+    <b-btn
+      @click="login()"
+      variant="hero-primary"
+      :disabled="loading"
+      class="mt-2"
+    >
       <font-awesome-icon
         v-if="!loading"
         icon="arrow-right"
