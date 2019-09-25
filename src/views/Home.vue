@@ -9,11 +9,14 @@
       <div class="hero-inner">
         <div class="content content-full text-center">
           <proxy-nation />
-          <welcome v-if="userState === 'auth'" />
-          <proxy-signup
-            v-if="userState === 'proxy' || userState === 'signup'"
-          />
-          <claim v-if="userState === 'claim'" />
+          <transition name="fade" mode="out-in">
+            <welcome v-if="userState === 'auth'" key="welcome" />
+            <proxy-signup
+              v-if="userState === 'proxy' || userState === 'signup'"
+              key="sign"
+            />
+            <claim v-if="userState === 'claim'" key="claim" />
+          </transition>
         </div>
       </div>
     </div>
@@ -64,4 +67,12 @@ export default class Home extends Vue {
   }
 }
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+</style>
