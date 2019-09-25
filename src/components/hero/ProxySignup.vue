@@ -1,9 +1,7 @@
 <template>
-  <hero-ui title="Action Required">
-    <template v-slot:headline>
-      PROXY<span class="text-primary-light">4</span>NATION
-    </template>
-    <div class="d-flex justify-content-center">
+  <div>
+    <span class="text-white-50 font-w600">Action Required</span>
+    <div class="d-flex justify-content-center mb-3">
       <b-badge
         v-if="!userProxy || typeof userProxy === 'string'"
         variant="secondary"
@@ -19,35 +17,23 @@
         <font-awesome-icon icon="check-double" class="mx-1" /> Signup
       </b-badge>
     </div>
-    <template v-slot:button>
-      <b-btn @click="claim()" variant="primary" :disabled="loading">
-        <font-awesome-icon
-          v-if="!loading"
-          icon="check-double"
-          fixed-width
-          class="mr-1"
-        />
-        <font-awesome-icon
-          v-else
-          icon="spinner"
-          spin
-          fixed-width
-          class="mr-1"
-        />
-        Do it!
-      </b-btn>
-    </template>
-  </hero-ui>
+    <b-btn @click="claim()" variant="primary" :disabled="loading">
+      <font-awesome-icon
+        v-if="!loading"
+        icon="check-double"
+        fixed-width
+        class="mr-1"
+      />
+      <font-awesome-icon v-else icon="spinner" spin fixed-width class="mr-1" />
+      Do it!
+    </b-btn>
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { vxm } from '@/store/'
-import StepUi from '@/components/steps/StepUi.vue'
-import HeroUi from '@/components/hero/HeroUi.vue'
-@Component({
-  components: { HeroUi }
-})
+@Component
 export default class ProxySignup extends Vue {
   loading = false
   claimResp: any = false
