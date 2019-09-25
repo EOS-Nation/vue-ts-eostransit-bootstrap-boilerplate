@@ -28,8 +28,8 @@ export class CoreModule extends VuexModule {
     if (!isAuthenticated) return false
     else {
       // @ts-ignore
-      const user = vxm.eosTransit.wallet.accountInfo
-      if (user.voter_info) {
+      const user = vxm.eosTransit.userInfo
+      if (user && user.voter_info) {
         if (user.voter_info.proxy === 'proxy4nation') return true
         else if (user.voter_info.proxy) return user.voter_info.proxy
         else return false
