@@ -7,9 +7,14 @@
   >
     <div class="hero bg-dark-90">
       <div class="hero-inner">
-        <welcome v-if="userState === 'auth'" />
-        <proxy-signup v-if="userState === 'proxy' || userState === 'signup'" />
-        <claim v-if="userState === 'claim'" />
+        <div class="content content-full text-center">
+          <proxy-nation />
+          <welcome v-if="userState === 'auth'" />
+          <proxy-signup
+            v-if="userState === 'proxy' || userState === 'signup'"
+          />
+          <claim v-if="userState === 'claim'" />
+        </div>
       </div>
     </div>
   </div>
@@ -21,10 +26,12 @@ import { vxm } from '@/store'
 import EosTransit from '@/components/authentication/EosTransit.vue'
 import Welcome from '@/components/hero/Welcome.vue'
 import ProxySignup from '@/components/hero/ProxySignup.vue'
-import Claim from '@/components/hero/Claim.vue' // @ is an alias to /src
+import Claim from '@/components/hero/Claim.vue'
+import ProxyNation from '@/components/layout/ProxyNation.vue' // @ is an alias to /src
 
 @Component({
   components: {
+    ProxyNation,
     Claim,
     ProxySignup,
     Welcome,
@@ -57,3 +64,4 @@ export default class Home extends Vue {
   }
 }
 </script>
+<style scoped lang="scss"></style>
