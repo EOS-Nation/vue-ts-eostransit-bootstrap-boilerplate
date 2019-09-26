@@ -20,7 +20,7 @@
       Next Claim Period
     </h3>
     <b-progress
-      v-if="seconds >= 0"
+      v-if="seconds > 0"
       :max="interval"
       :value="interval - seconds"
       animated
@@ -94,6 +94,7 @@ export default class Claim extends Vue {
     this.loading = false
   }
   handleTimeExpire() {
+    clearInterval(this.progressTime)
     this.seconds = -1
   }
 
@@ -105,7 +106,7 @@ export default class Claim extends Vue {
   progressData() {
     this.progressTime = setInterval(() => {
       this.calcSeconds()
-    }, 5000)
+    }, 10000)
   }
 
   calcSeconds() {
@@ -114,7 +115,6 @@ export default class Claim extends Vue {
       let offset = new Date(
         this.userSigned.next_claim_period
       ).getTimezoneOffset()
-      console.log(offset)
       let end = new Date(this.userSigned.next_claim_period).getTime()
       let ms = end - now
       this.seconds = parseInt((ms / 1000 - offset * 60).toString())
