@@ -81,7 +81,19 @@ export class CoreModule extends VuexModule {
       upper_bound: user,
       limit: 1
     })
-    if (resp && resp.rows.length) this.setUserSigned(resp.rows[0])
+    if (resp && resp.rows.length) {
+      this.setUserSigned(resp.rows[0])
+    }
+  }
+
+  @action async calcRewards() {
+    let amount = 0
+    if (this.userSignedUp && this.settings)
+      amount =
+        (((this.userSignedUp.staked * this.settings.rate) / 10000 / 365) * 1) /
+        (86400 / this.settings.interval)
+    console.log(amount)
+    return amount
   }
 
   @action async claim(a: { vote: boolean; signup: boolean; claim: boolean }) {
