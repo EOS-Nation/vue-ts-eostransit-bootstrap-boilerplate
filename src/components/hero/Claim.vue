@@ -21,8 +21,8 @@
     </h3>
     <b-progress
       v-if="seconds >= 0"
-      :max="24 * 60 * 60"
-      :value="24 * 60 * 60 - seconds"
+      :max="interval"
+      :value="interval - seconds"
       animated
       class="my-3"
     />
@@ -61,9 +61,17 @@ export default class Claim extends Vue {
   claimResp: any = false
   seconds = 0
   polling: any
+  progressTime: any
 
   get userState() {
     return vxm.core.userState
+  }
+
+  get interval() {
+    const interval = vxm.core.settings
+    if (interval && interval.interval) {
+      return interval.interval
+    } else return 0
   }
 
   get userSigned() {
@@ -94,6 +102,11 @@ export default class Claim extends Vue {
       this.calcSeconds()
     }, 1000)
   }
+  progressData() {
+    this.progressTime = setInterval(() => {
+      this.calcSeconds()
+    }, 5000)
+  }
 
   calcSeconds() {
     if (this.userSigned) {
@@ -110,10 +123,12 @@ export default class Claim extends Vue {
   }
   beforeDestroy() {
     clearInterval(this.polling)
+    clearInterval(this.progressTime)
   }
 
   created() {
     this.pollData()
+    this.progressData()
   }
 }
 </script>
