@@ -65,6 +65,10 @@ export default class Home extends Vue {
   logout() {
     vxm.eosTransit.logout()
   }
+
+  created() {
+    vxm.core.getSettings()
+  }
 }
 </script>
 <style scoped lang="scss">
