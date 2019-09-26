@@ -14,6 +14,7 @@ export class CoreModule extends VuexModule {
   @getter language: string = 'en'
   @getter voters: VotersTable[] = []
   @getter userSignedUp: VotersTable | false = false
+  @getter settings: { rate: number; interval: number } | false = false
 
   get userState() {
     if (!vxm.eosTransit.isAuthenticated) return 'auth'
@@ -34,6 +35,19 @@ export class CoreModule extends VuexModule {
         else return false
       } else return false
     }
+  }
+
+  @action async getSettings() {
+    const settings = await vxm.eosTransit.accessContext.eosRpc.get_table_rows({
+      code: 'proxy4nation',
+      table: 'settings',
+      scope: 'proxy4nation',
+      limit: 1
+    })
+    this.setSettings({
+      interval: settings.rows[0].interval,
+      rate: settings.rows[0].rate
+    })
   }
 
   @action async getVoters() {
@@ -223,6 +237,11 @@ export class CoreModule extends VuexModule {
   }
   @mutation setVoters(v: VotersTable[]) {
     this.voters = v
+  }
+
+  @mutation setSettings(s: { rate: number; interval: number }) {
+    this.settings = s
+    console.log(s)
   }
 
   @mutation setUserSigned(v: VotersTable | false) {
