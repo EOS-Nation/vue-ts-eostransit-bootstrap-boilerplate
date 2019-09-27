@@ -25,7 +25,7 @@
         class="mr-1"
       />
       <font-awesome-icon v-else icon="spinner" spin fixed-width class="mr-1" />
-      Signup
+      Do it!
     </b-btn>
   </div>
 </template>
