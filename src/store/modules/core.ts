@@ -15,7 +15,10 @@ export class CoreModule extends VuexModule {
   @getter language: string = 'en'
   @getter voters: VotersTable[] = []
   @getter userSignedUp: VotersTable | false = false
-  @getter settings: { rate: number; interval: number } | false = false
+  @getter settings:
+    | { bp: number; interval: number; rex: number; total: number }
+    | false = false
+  @getter rewards: any[] = []
 
   get userState() {
     if (!vxm.eosTransit.isAuthenticated) return 'auth'
@@ -45,9 +48,18 @@ export class CoreModule extends VuexModule {
       scope: 'proxy4nation',
       limit: 1
     })
+    const rewards = await vxm.eosTransit.accessContext.eosRpc.get_table_rows({
+      code: 'proxy4nation',
+      table: 'rewards',
+      scope: 'proxy4nation',
+      limit: 10
+    })
+    this.setRewards(rewards.rows)
     this.setSettings({
       interval: settings.rows[0].interval,
-      rate: settings.rows[0].rate
+      bp: settings.rows[0].rate,
+      rex: settings.rows[0].rex,
+      total: settings.rows[0].rex + settings.rows[0].rate
     })
   }
 
@@ -91,10 +103,10 @@ export class CoreModule extends VuexModule {
     let amount = 0
     if (this.userSignedUp && this.settings)
       amount =
-        (((this.userSignedUp.staked * this.settings.rate) / 10000 / 365) * 1) /
+        (((this.userSignedUp.staked * this.settings.total) / 10000 / 365) * 1) /
         (86400 / this.settings.interval)
     let eos = amount / 10000
-    let dapp = eos * 10
+    let dapp = eos * this.rewards[0].multiplier
     if (eos < 0.0001) eos = 0.0001
     if (dapp < 0.0001) dapp = 0.0001
     return {
@@ -259,7 +271,16 @@ export class CoreModule extends VuexModule {
     this.voters = v
   }
 
-  @mutation setSettings(s: { rate: number; interval: number }) {
+  @mutation setRewards(r: any[]) {
+    this.rewards = r
+  }
+
+  @mutation setSettings(s: {
+    bp: number
+    interval: number
+    rex: number
+    total: number
+  }) {
     this.settings = s
     console.log(s)
   }

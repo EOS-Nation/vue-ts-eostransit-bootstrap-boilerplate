@@ -18,7 +18,10 @@
         class="img-avatar img-avatar48 mx-2"
       />
       <h3 class="text-white m-0 p-0">
-        DAPP <span class="text-white-50 font-size-sm">(10x)</span>
+        DAPP
+        <span v-if="rewards.length" class="text-white-50 font-size-sm"
+          >({{ rewards[1].multiplier }}x)</span
+        >
       </h3>
     </div>
   </div>
@@ -33,15 +36,8 @@ export default class Rewards extends Vue {
   apr: number | false = false
   period: number | false = false
 
-  async created() {
-    const settings = await vxm.eosTransit.accessContext.eosRpc.get_table_rows({
-      code: 'proxy4nation',
-      table: 'settings',
-      scope: 'proxy4nation',
-      limit: 1
-    })
-    this.apr = settings.rows[0].rate / 100
-    this.period = settings.rows[0].interval / 60 / 60
+  get rewards() {
+    return vxm.core.rewards
   }
 }
 </script>
