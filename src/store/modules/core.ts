@@ -8,6 +8,7 @@ import {
 import i18n from '@/i18n'
 import { VotersTable } from '@/types/proxy'
 import { vxm } from '@/store'
+import numeral from 'numeral'
 
 @Module({ namespacedPath: 'core/' })
 export class CoreModule extends VuexModule {
@@ -92,8 +93,14 @@ export class CoreModule extends VuexModule {
       amount =
         (((this.userSignedUp.staked * this.settings.rate) / 10000 / 365) * 1) /
         (86400 / this.settings.interval)
-    console.log(amount)
-    return amount
+    let eos = amount / 10000
+    let dapp = eos * 10
+    if (eos < 0.0001) eos = 0.0001
+    if (dapp < 0.0001) dapp = 0.0001
+    return {
+      eos: numeral(eos).format('0,0.0000'),
+      dapp: numeral(dapp).format('0,0.0000')
+    }
   }
 
   @action async claim(a: { vote: boolean; signup: boolean; claim: boolean }) {

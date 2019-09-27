@@ -4,8 +4,16 @@
       PROXY<span class="text-primary-light">4</span>NATION
     </h1>
     <h2 v-if="rate && interval" class="font-w300 text-white-75 mb-2">
-      Vote for our proxy and claim your share {{ rate }}% APR every
-      {{ interval }}!
+      Proxy to EOS Nation and claim your share every {{ interval }}!
+      <br />
+      <span id="tooltip-apr">
+        <font-awesome-icon icon="info-circle" class="font-size-base mb-1" />
+        APR {{ rate }}%
+      </span>
+      <b-tooltip target="tooltip-apr" triggers="hover">
+        APR is calculated at the time of claim and is subject to change based on
+        the amount of EOS proxied.
+      </b-tooltip>
     </h2>
     <h2 v-else class="font-w300 text-white-75 mb-2">
       Vote for our proxy and claim your share

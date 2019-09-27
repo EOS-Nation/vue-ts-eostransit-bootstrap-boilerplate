@@ -33,6 +33,7 @@
       @click="claim()"
       variant="hero-primary"
       class="mt-4"
+      :class="{ 'not-allowed': seconds >= 0 || loading }"
     >
       <font-awesome-icon
         v-if="!loading"
@@ -43,6 +44,7 @@
       <font-awesome-icon v-else icon="spinner" spin fixed-width class="mr-1" />
       CLAIM
     </b-btn>
+    <modal-success :rewards="rewards" />
   </div>
 </template>
 
@@ -53,8 +55,9 @@ import { vxm } from '@/store/'
 import VueCountdown from '@dmaksimovic/vue-countdown'
 import ProxyNation from '@/components/layout/ProxyNation.vue'
 import Rewards from '@/components/layout/Rewards.vue'
+import ModalSuccess from '@/components/layout/ModalSuccess.vue'
 @Component({
-  components: { Rewards, ProxyNation, VueCountdown }
+  components: { ModalSuccess, Rewards, ProxyNation, VueCountdown }
 })
 export default class Claim extends Vue {
   loading = false
@@ -62,6 +65,7 @@ export default class Claim extends Vue {
   seconds = 0
   polling: any
   progressTime: any
+  rewards: any = false
 
   get userState() {
     return vxm.core.userState
@@ -89,7 +93,8 @@ export default class Claim extends Vue {
       signup: false,
       claim: true
     })
-    const test = await vxm.core.calcRewards()
+    this.rewards = await vxm.core.calcRewards()
+    this.$bvModal.show('modal-success')
     this.calcSeconds()
     this.pollData()
     this.progressData()
@@ -109,6 +114,10 @@ export default class Claim extends Vue {
     this.progressTime = setInterval(() => {
       this.calcSeconds()
     }, 10000)
+  }
+
+  openSuccess() {
+    this.$bvModal.show('modal-success')
   }
 
   calcSeconds() {
@@ -138,5 +147,8 @@ export default class Claim extends Vue {
 <style scoped lang="scss">
 .claimTimer {
   letter-spacing: 10px;
+}
+.not-allowed {
+  cursor: not-allowed;
 }
 </style>
