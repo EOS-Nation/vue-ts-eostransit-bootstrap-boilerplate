@@ -21,7 +21,7 @@
           <hr class="text-muted my-2" />
           <strong>Current APR:</strong> {{ rate + rex }}%
           <br />
-          <strong>BP:</strong> {{ rate }}% - <strong>REX:</strong> {{ rex }}
+          <strong>BP:</strong> {{ rate }}% + <strong>REX:</strong> {{ rex }}%
         </div>
       </b-tooltip>
     </h2>

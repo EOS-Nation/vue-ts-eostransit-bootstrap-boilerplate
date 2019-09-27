@@ -18,7 +18,7 @@ import ledger from 'eos-transit-ledger-provider'
 import tp from 'eos-transit-tokenpocket-provider'
 import meetone from 'eos-transit-meetone-provider'
 import whalevault from 'eos-transit-whalevault-provider'
-import keycat from 'eos-transit-keycat-provider'
+// import keycat from 'eos-transit-keycat-provider'
 import { vxm } from '@/store'
 
 @Module({ namespacedPath: 'eosTransit/' })
@@ -44,7 +44,7 @@ export class EosTransitModule extends VuexModule {
     walletProviders: [
       scatter(),
       lynx(),
-      keycat(),
+      // keycat(),
       ledger(),
       tp(),
       meetone(),
