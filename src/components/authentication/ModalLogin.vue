@@ -18,11 +18,13 @@
         >
           <img
             @click="initLogin(provider)"
-            class="img-avatar img-avatar-thumb cursor mt-3"
+            class="img-avatar img-avatar-thumb cursor mt-3 mb-2"
             :src="require('@/assets/img/' + providerLogoUrl(provider))"
             alt="Provider Logo"
           />
-          <h3 @click="initLogin(provider)" class="cursor mb-4">{{ provider.meta.name }}</h3>
+          <h3 @click="initLogin(provider)" class="cursor mb-4">
+            {{ provider.meta.name }}
+          </h3>
         </b-col>
       </b-row>
       <b-row v-else-if="error" key="error" class="d-flex align-items-center">

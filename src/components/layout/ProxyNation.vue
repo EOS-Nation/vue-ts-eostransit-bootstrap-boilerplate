@@ -8,11 +8,15 @@
       <br />
       <span id="tooltip-apr">
         <font-awesome-icon icon="info-circle" class="font-size-base mb-1" />
-        APR {{ rate }}%
+        APR {{ rate+0.16 }}%
       </span>
       <b-tooltip target="tooltip-apr" triggers="hover">
         APR is calculated at the time of claim and is subject to change based on
         the amount of EOS proxied.
+        <hr class="text-muted my-2" />
+        <strong>Current APR:</strong> {{ rate+0.16 }}%
+        <br />
+        <strong>BP:</strong> {{ rate }}% - <strong>REX:</strong> 0.16%
       </b-tooltip>
     </h2>
     <h2 v-else class="font-w300 text-white-75 mb-2">
