@@ -11,12 +11,14 @@
         APR {{ rate + rex }}%
       </span>
       <b-tooltip target="tooltip-apr" triggers="hover focus click">
-        APR is calculated at the time of claim and is subject to change based on
-        the amount of EOS proxied
-        <hr class="text-muted my-2" />
-        <strong>Current APR:</strong> {{ rate + rex }}%
-        <br />
-        <strong>BP:</strong> {{ rate }}% - <strong>REX:</strong> {{ rex }}
+          <div class="py-2">
+              APR is calculated at the time of claim and is subject to change based on
+              the amount of EOS proxied
+              <hr class="text-muted my-2" />
+              <strong>Current APR:</strong> {{ rate + rex }}%
+              <br />
+              <strong>BP:</strong> {{ rate }}% - <strong>REX:</strong> {{ rex }}
+          </div>
       </b-tooltip>
     </h2>
     <h2 v-else class="font-w300 text-white-75 mb-2">
