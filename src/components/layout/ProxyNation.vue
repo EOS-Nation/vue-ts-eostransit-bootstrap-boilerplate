@@ -10,7 +10,7 @@
         <font-awesome-icon icon="info-circle" class="font-size-base mb-1" />
         APR {{ rate + rex }}%
       </span>
-      <b-tooltip target="tooltip-apr" triggers="hover">
+      <b-tooltip target="tooltip-apr" triggers="hover focus click">
         APR is calculated at the time of claim and is subject to change based on
         the amount of EOS proxied
         <hr class="text-muted my-2" />
