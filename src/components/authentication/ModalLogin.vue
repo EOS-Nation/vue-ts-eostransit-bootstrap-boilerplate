@@ -7,15 +7,22 @@
       <b-row
         v-if="!loading && !error"
         key="select"
-        class="d-flex align-items-center"
+        class="d-flex align-items-center justify-content-center"
       >
         <b-col
           md="6"
+          lg="4"
           v-for="provider in walletProviders"
           :key="provider.id"
           class="text-center"
         >
-          <h3 @click="initLogin(provider)">{{ provider.meta.name }}</h3>
+          <img
+            @click="initLogin(provider)"
+            class="img-avatar img-avatar-thumb cursor mt-3"
+            :src="require('@/assets/img/' + providerLogoUrl(provider))"
+            alt="Provider Logo"
+          />
+          <h3 @click="initLogin(provider)" class="cursor mb-4">{{ provider.meta.name }}</h3>
         </b-col>
       </b-row>
       <b-row v-else-if="error" key="error" class="d-flex align-items-center">
@@ -61,6 +68,27 @@ export default class ModalLogin extends Vue {
 
   get loginError() {
     return vxm.eosTransit.loginError
+  }
+
+  providerLogoUrl(p: WalletProvider) {
+    switch (p.id) {
+      case 'scatter':
+        return 'scatter.svg'
+      case 'ledger':
+        return 'ledger.png'
+      case 'meetone_provider':
+        return 'meetone.jpg'
+      case 'Keycat':
+        return 'keycat.svg'
+      case 'TokenPocket':
+        return 'tp.jpg'
+      case 'EOS Lynx':
+        return 'lynx.jpg'
+      case 'whalevault':
+        return 'whalevault.png'
+      default:
+        return 'eos.png'
+    }
   }
 
   // methods

@@ -16,9 +16,13 @@
       </b-tooltip>
     </h2>
     <h2 v-else class="font-w300 text-white-75 mb-2">
-      Vote for our proxy and claim your share
-      <font-awesome-icon icon="spinner" spin /> % APR every
+      Proxy to EOS Nation and claim your share every
       <font-awesome-icon icon="spinner" spin /> hours!
+      <br />
+      <span>
+        <font-awesome-icon icon="info-circle" class="font-size-base mb-1" />
+        APR <font-awesome-icon icon="spinner" spin />%
+      </span>
     </h2>
   </div>
 </template>
