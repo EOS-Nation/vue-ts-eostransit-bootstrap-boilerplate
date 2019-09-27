@@ -90,7 +90,6 @@ export default class Claim extends Vue {
       claim: true
     })
     const test = await vxm.core.calcRewards()
-    console.log(test)
     this.calcSeconds()
     this.pollData()
     this.progressData()

@@ -159,10 +159,11 @@ export class CoreModule extends VuexModule {
           }
         )
         await this.checkSignup()
-        const userInfo = await wallet.fetchAccountInfo(user)
+        let userInfo = await wallet.fetchAccountInfo(user)
         vxm.eosTransit.setUserInfo(userInfo)
         await this.checkSignup()
-        await this.checkSignup()
+        userInfo = await wallet.fetchAccountInfo(user)
+        vxm.eosTransit.setUserInfo(userInfo)
       } catch (e) {
         resp = e
       }
