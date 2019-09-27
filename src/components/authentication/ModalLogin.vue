@@ -27,11 +27,7 @@
           </h3>
         </b-col>
       </b-row>
-      <b-row
-        v-else-if="error"
-        key="error"
-        class="d-flex align-items-center"
-      >
+      <b-row v-else-if="error" key="error" class="d-flex align-items-center">
         <b-col class="text-center">
           <img
             class="img-avatar img-avatar-thumb cursor mb-2"
