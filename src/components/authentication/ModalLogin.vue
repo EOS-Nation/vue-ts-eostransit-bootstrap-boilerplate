@@ -27,17 +27,31 @@
           </h3>
         </b-col>
       </b-row>
-      <b-row v-else-if="error" key="error" class="d-flex align-items-center">
-        <b-col>
-          <h3>{{ selectedProvider.meta.name }}</h3>
+      <b-row
+        v-else-if="error"
+        key="error"
+        class="d-flex align-items-center"
+      >
+        <b-col class="text-center">
+          <img
+            class="img-avatar img-avatar-thumb cursor mb-2"
+            :src="require('@/assets/img/' + providerLogoUrl(selectedProvider))"
+            alt="Provider Logo"
+          />
+          <h3 class="mt-2">{{ selectedProvider.meta.name }}</h3>
           <p v-if="error.message">{{ error.message }}</p>
           <p v-else>{{ error }}</p>
           <b-btn @click="error = false">Try Again</b-btn>
         </b-col>
       </b-row>
       <b-row v-else key="loading" class="d-flex align-items-center">
-        <b-col>
-          <h3>{{ selectedProvider.meta.name }}</h3>
+        <b-col class="text-center">
+          <img
+            class="img-avatar img-avatar-thumb cursor mb-2"
+            :src="require('@/assets/img/' + providerLogoUrl(selectedProvider))"
+            alt="Provider Logo"
+          />
+          <h3 class="mt-2">{{ selectedProvider.meta.name }}</h3>
           {{ loginStatus[0] }}
         </b-col>
       </b-row>
