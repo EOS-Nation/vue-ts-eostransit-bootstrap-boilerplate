@@ -103,7 +103,7 @@ export class CoreModule extends VuexModule {
     let amount = 0
     if (this.userSignedUp && this.settings)
       amount =
-        (((this.userSignedUp.staked * this.settings.total) / 10000 / 365) * 1) /
+        (((this.userSignedUp.staked * this.settings.bp) / 10000 / 365) * 1) /
         (86400 / this.settings.interval)
     let eos = amount / 10000
     let dapp = eos * this.rewards[1].multiplier
