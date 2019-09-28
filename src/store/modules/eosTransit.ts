@@ -14,7 +14,7 @@ import {
 } from 'eos-transit'
 import scatter from 'eos-transit-scatter-provider'
 import lynx from 'eos-transit-lynx-provider'
-import ledger from 'eos-transit-ledger-provider'
+// import ledger from 'eos-transit-ledger-provider'
 import tp from 'eos-transit-tokenpocket-provider'
 import meetone from 'eos-transit-meetone-provider'
 import whalevault from 'eos-transit-whalevault-provider'
@@ -33,7 +33,7 @@ export class EosTransitModule extends VuexModule {
 
   // We're using our own test network as an example here.
   @getter accessContext = initAccessContext({
-    appName: 'MyEOS Web DAPP',
+    appName: 'EOS Nation Proxy Portal',
     network: {
       host: 'nodes.get-scatter.com',
       port: 443,
@@ -45,7 +45,7 @@ export class EosTransitModule extends VuexModule {
       scatter(),
       lynx(),
       // keycat(),
-      ledger(),
+      // ledger(),
       tp(),
       meetone(),
       whalevault()
