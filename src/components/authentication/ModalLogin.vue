@@ -41,7 +41,10 @@
         </b-col>
       </b-row>
       <b-row v-else key="loading" class="d-flex align-items-center">
-        <b-col v-if="selectedProvider.id !== 'ledger'" class="text-center">
+        <b-col
+          v-if="selectedProvider.id !== 'ledgeruwebauthn'"
+          class="text-center"
+        >
           <img
             class="img-avatar img-avatar-thumb cursor mb-2"
             :src="require('@/assets/img/' + providerLogoUrl(selectedProvider))"
@@ -58,18 +61,24 @@
           />
           <h3 class="mt-2">{{ selectedProvider.meta.name }}</h3>
           <div v-if="!ledgerDiscovery">
-            Searching for accounts on your Ledger device...
+            <p>
+              Searching for accounts on your Ledger device...<br />Please make
+              sure your Ledger is unlocked and opened the EOS App.
+            </p>
+            <font-awesome-icon icon="spinner" spin class="fa-3x my-3 text-primary" />
           </div>
           <div v-else>
-            <h4>
-              <span class="text-capitalize">Choose Account</span>
+            <h4 class="text-capitalize my-4">
+              Choose Account
             </h4>
-            <template v-for="key in ledgerDiscovery">
+            <template v-for="key in ledgerDiscovery.keyToAccountMap">
               <b-btn
                 variant="primary"
                 v-for="account in key.accounts"
                 :key="account.account"
+                @click="ledgerLogin(account)"
                 class="btn-block mr-1"
+                :disabled="loadingLedger"
               >
                 <span class="font-w700">{{ account.account }}</span
                 >@{{ account.authorization }}
@@ -85,12 +94,13 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { vxm } from '@/store/'
-import { WalletProvider } from 'eos-transit'
+import { DiscoveryAccount, WalletProvider } from 'eos-transit'
 
 @Component
 export default class ModalLogin extends Vue {
   // data
   loading = false
+  loadingLedger = false
   error: any = false
   // computed
   get walletProviders(): WalletProvider[] {
@@ -113,11 +123,28 @@ export default class ModalLogin extends Vue {
     return vxm.eosTransit.loginError
   }
 
+  get wallet() {
+    return vxm.eosTransit.wallet
+  }
+
+  async ledgerLogin(u: any) {
+    try {
+      this.loadingLedger = true
+      await vxm.eosTransit.ledgerLogin(u)
+      this.$bvModal.hide('modal-login')
+    } catch (e) {
+      this.error = e
+      console.log(e)
+    }
+    this.loadingLedger = false
+    this.loading = false
+  }
+
   providerLogoUrl(p: WalletProvider) {
     switch (p.id) {
       case 'scatter':
         return 'scatter.svg'
-      case 'ledgeru2f':
+      case 'ledgeruwebauthn':
         return 'ledger.png'
       case 'meetone_provider':
         return 'meetone.jpg'
@@ -139,12 +166,13 @@ export default class ModalLogin extends Vue {
     this.loading = true
     try {
       await vxm.eosTransit.initLogin(p)
-      this.$bvModal.hide('modal-login')
+      if (p.id !== 'ledgeruwebauthn') {
+        this.$bvModal.hide('modal-login')
+        this.loading = false
+      }
     } catch (e) {
       this.error = e
       console.log(e)
-    } finally {
-      this.loading = false
     }
   }
 }

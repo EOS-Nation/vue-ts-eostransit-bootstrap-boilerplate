@@ -10,7 +10,8 @@ import {
   WalletProvider,
   Wallet,
   WalletState,
-  DiscoveryData
+  DiscoveryData,
+  DiscoveryAccount
 } from 'eos-transit'
 import scatter from 'eos-transit-scatter-provider'
 import lynx from 'eos-transit-lynx-provider'
@@ -45,10 +46,10 @@ export class EosTransitModule extends VuexModule {
       lynx(),
       ledger({
         exchangeTimeout: 30000,
-        transport: 'TransportU2F',
-        name: 'Ledger Nano S U2F',
-        shortName: 'Ledger Nano S U2F',
-        id: 'ledgeru2f'
+        transport: 'TransportWebAuthn',
+        name: 'Ledger Nano S',
+        shortName: 'Ledger Nano S',
+        id: 'ledgeruwebauthn'
       }),
       tp(),
       meetone(),
@@ -146,7 +147,7 @@ export class EosTransitModule extends VuexModule {
       // it does it right after connection, so this is more for the state tracking
       // and for WAL to fetch the EOS account data for us)
       try {
-        if (provider.id !== 'ledgeru2f') {
+        if (provider.id !== 'ledgeruwebauthn') {
           await wallet.login()
           // wallet.authenticated === true
           this.setWallet(wallet)
@@ -162,18 +163,22 @@ export class EosTransitModule extends VuexModule {
           //start public key discovery for first index
           let more = true
           let i = 0
-          let data: DiscoveryData
+          let data: DiscoveryData | false = false
           while (more) {
-            data = await wallet.discover({
-              pathIndexList: [0,1]
-            })
-            console.log(data)
-            if (data && data.keyToAccountMap[i].accounts.length === 0) {
-              this.setDiscoveryData(data)
-              more = false
+            try {
+              data = await wallet.discover({
+                pathIndexList: [i]
+              })
+              if (data && data.keyToAccountMap[i].accounts.length === 0) {
+                more = false
+              }
+              i++
+            } catch (e) {
+              data = false
+              throw e
             }
-            i++
           }
+          this.setDiscoveryData(data)
         }
       } catch (e) {
         console.log('auth error')
@@ -190,7 +195,18 @@ export class EosTransitModule extends VuexModule {
       this.wallet.logout()
       this.setWallet(false)
       this.setWalletState(false)
+      this.setDiscoveryData(false)
       localStorage.removeItem('autoLogin')
+    }
+  }
+
+  @action async ledgerLogin(user: any) {
+    if (this.wallet) {
+      try {
+        return await this.wallet.login(user.account, user.authorization)
+      } catch (e) {
+        throw e
+      }
     }
   }
 
@@ -207,7 +223,7 @@ export class EosTransitModule extends VuexModule {
     this.walletState = state
   }
 
-  @mutation setDiscoveryData(d: DiscoveryData) {
+  @mutation setDiscoveryData(d: DiscoveryData | false) {
     this.discoveryData = d
   }
 }
