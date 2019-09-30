@@ -6,4 +6,5 @@ export interface VotersTable {
   last_vote_weight: string
   is_proxy: boolean
   next_claim_period: Date
+  referral?: string
 }
