@@ -97,7 +97,7 @@ export class CoreModule extends VuexModule {
     if (resp && resp.rows.length) {
       this.setUserSigned(resp.rows[0])
     }
-    this.tmp()
+    // this.tmp()
   }
 
   @action async tmp() {
