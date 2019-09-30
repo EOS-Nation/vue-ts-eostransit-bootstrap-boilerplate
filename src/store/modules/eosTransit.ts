@@ -43,7 +43,13 @@ export class EosTransitModule extends VuexModule {
     walletProviders: [
       scatter(),
       lynx(),
-      ledger(),
+      ledger({
+        exchangeTimeout: 30000,
+        transport: 'TransportU2F',
+        name: 'Ledger Nano S U2F',
+        shortName: 'Ledger Nano S U2F',
+        id: 'ledgeru2f'
+      }),
       tp(),
       meetone(),
       whalevault(),
@@ -140,7 +146,7 @@ export class EosTransitModule extends VuexModule {
       // it does it right after connection, so this is more for the state tracking
       // and for WAL to fetch the EOS account data for us)
       try {
-        if (provider.id !== 'ledger') {
+        if (provider.id !== 'ledgeru2f') {
           await wallet.login()
           // wallet.authenticated === true
           this.setWallet(wallet)
@@ -159,7 +165,7 @@ export class EosTransitModule extends VuexModule {
           let data: DiscoveryData
           while (more) {
             data = await wallet.discover({
-              pathIndexList: [i]
+              pathIndexList: [0,1]
             })
             console.log(data)
             if (data && data.keyToAccountMap[i].accounts.length === 0) {

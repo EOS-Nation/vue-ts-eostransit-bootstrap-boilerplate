@@ -117,7 +117,7 @@ export default class ModalLogin extends Vue {
     switch (p.id) {
       case 'scatter':
         return 'scatter.svg'
-      case 'ledger':
+      case 'ledgeru2f':
         return 'ledger.png'
       case 'meetone_provider':
         return 'meetone.jpg'
