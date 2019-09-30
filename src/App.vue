@@ -1,7 +1,11 @@
 <template>
   <b-container>
     <navigation />
-    <router-view />
+    <b-row>
+      <b-col>
+        <router-view />
+      </b-col>
+    </b-row>
     <modal-login />
   </b-container>
 </template>
@@ -11,7 +15,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import Navigation from '@/components/layout/Navigation.vue'
 import ModalLogin from '@/components/authentication/ModalLogin.vue'
 import { vxm } from '@/store/'
-import { WalletProvider } from 'eos-transit'
+import { WalletProvider } from 'eos-transit/lib'
 
 @Component({
   components: {

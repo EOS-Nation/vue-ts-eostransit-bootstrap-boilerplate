@@ -1,25 +1,26 @@
 <template>
-  <b-row>
-    <b-col md="4"><step1 /></b-col>
-    <b-col md="4"><step2 /></b-col>
-    <b-col md="4"><step3 /></b-col>
-  </b-row>
+  <div>
+    <b-jumbotron
+      header="Bootstrap Vue"
+      lead="Bootstrap 4 Components for Vue.js 2"
+    >
+      <p>For more information visit website</p>
+      <b-button variant="primary" href="#">More Info</b-button>
+    </b-jumbotron>
+    <span>Auth: {{ isAuthenticated }}</span> <span @click="logout()">Logout</span>
+    <pre v-if="wallet">{{ wallet.auth }}</pre>
+    <HelloWorld :msg="$t('welcome')" />
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { vxm } from '@/store'
 import HelloWorld from '@/components/HelloWorld.vue'
-import EosTransit from '@/components/authentication/EosTransit.vue'
-import Step1 from '@/components/steps/Step1.vue'
-import Step2 from '@/components/steps/Step2.vue'
-import Step3 from '@/components/steps/Step3.vue' // @ is an alias to /src
+import EosTransit from '@/components/authentication/EosTransit.vue' // @ is an alias to /src
 
 @Component({
   components: {
-    Step3,
-    Step2,
-    Step1,
     HelloWorld,
     EosTransit
   }
