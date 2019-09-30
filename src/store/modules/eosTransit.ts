@@ -10,11 +10,12 @@ import {
   WalletProvider,
   Wallet,
   WalletState,
-  AccountInfo
+  AccountInfo,
+  DiscoveryData
 } from 'eos-transit'
 import scatter from 'eos-transit-scatter-provider'
 import lynx from 'eos-transit-lynx-provider'
-// import ledger from 'eos-transit-ledger-provider'
+import ledger from 'eos-transit-ledger-provider'
 import tp from 'eos-transit-tokenpocket-provider'
 import meetone from 'eos-transit-meetone-provider'
 import whalevault from 'eos-transit-whalevault-provider'
@@ -45,7 +46,13 @@ export class EosTransitModule extends VuexModule {
       scatter(),
       lynx(),
       // keycat(),
-      // ledger(),
+      ledger({
+        exchangeTimeout: 30000,
+        transport: 'TransportWebAuthn',
+        name: 'Ledger Nano S',
+        shortName: 'Ledger Nano S',
+        id: 'ledgeruwebauthn'
+      }),
       tp(),
       meetone(),
       whalevault()
@@ -76,6 +83,7 @@ export class EosTransitModule extends VuexModule {
 
   @getter wallet: Wallet | false = false
   @getter walletState: WalletState | false = false
+  @getter discoveryData: DiscoveryData | false = false
 
   get loginStatus() {
     const login = ['Login', 'arrow-right', false]
@@ -143,21 +151,45 @@ export class EosTransitModule extends VuexModule {
       // it does it right after connection, so this is more for the state tracking
       // and for WAL to fetch the EOS account data for us)
       try {
-        await wallet.login()
-        // wallet.authenticated === true
+        if (provider.id !== 'ledgeruwebauthn') {
+          await wallet.login()
+          // wallet.authenticated === true
+          this.setWallet(wallet)
+          if (wallet.accountInfo) this.setUserInfo(wallet.accountInfo)
+          vxm.core.checkSignup()
+          // Now that we have a wallet that is connected, logged in and have account data available,
+          // you can use it to sign transactions using the `eosjs` API instance that is automatically
+          // created and maintained by the wallet.
 
-        this.setWallet(wallet)
-        if (wallet.accountInfo) this.setUserInfo(wallet.accountInfo)
-        await vxm.core.checkSignup()
-        // Now that we have a wallet that is connected, logged in and have account data available,
-        // you can use it to sign transactions using the `eosjs` API instance that is automatically
-        // created and maintained by the wallet.
-
-        // set autologin
-        localStorage.setItem('autoLogin', provider.id)
+          // set autologin
+          localStorage.setItem('autoLogin', provider.id)
+        } else {
+          this.setWallet(wallet)
+          //start public key discovery for first index
+          let more = true
+          let i = 0
+          let data: DiscoveryData | false = false
+          while (more) {
+            try {
+              data = await wallet.discover({
+                pathIndexList: [i]
+              })
+              if (data && data.keyToAccountMap[i].accounts.length === 0) {
+                more = false
+              }
+              i++
+            } catch (e) {
+              data = false
+              throw e
+            }
+          }
+          this.setDiscoveryData(data)
+        }
       } catch (e) {
         console.log('auth error')
         throw e
+      } finally {
+        this.check
       }
     } catch (e) {
       console.log('connection error')
@@ -170,8 +202,21 @@ export class EosTransitModule extends VuexModule {
       this.wallet.logout()
       this.setWallet(false)
       this.setWalletState(false)
+      this.setDiscoveryData(false)
       localStorage.removeItem('autoLogin')
       vxm.core.setUserSigned(false)
+    }
+  }
+
+  @action async ledgerLogin(user: any) {
+    if (this.wallet) {
+      try {
+        await this.wallet.login(user.account, user.authorization)
+        if (this.wallet.accountInfo) this.setUserInfo(this.wallet.accountInfo)
+        vxm.core.checkSignup()
+      } catch (e) {
+        throw e
+      }
     }
   }
 
@@ -190,6 +235,9 @@ export class EosTransitModule extends VuexModule {
 
   @mutation setUserInfo(u: AccountInfo) {
     this.userInfo = u
+  }
+  @mutation setDiscoveryData(d: DiscoveryData | false) {
+    this.discoveryData = d
   }
 }
 export const eosTransit = EosTransitModule.ExtractVuexModule(EosTransitModule)

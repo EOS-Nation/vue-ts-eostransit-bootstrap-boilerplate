@@ -97,6 +97,37 @@ export class CoreModule extends VuexModule {
     if (resp && resp.rows.length) {
       this.setUserSigned(resp.rows[0])
     }
+    this.tmp()
+  }
+
+  @action async tmp() {
+    const resp = await vxm.eosTransit.accessContext.eosRpc.get_table_rows({
+      code: 'proxy4nation',
+      table: 'voters',
+      scope: 'proxy4nation',
+      limit: 410
+    })
+    let eosn = resp.rows.filter(
+      (v: VotersTable) => v.referral === 'eosnationinc'
+    )
+    let cafe = resp.rows.filter(
+      (v: VotersTable) => v.referral === 'eoscafestake'
+    )
+    let eosnStake = 0
+    for (const v of eosn) {
+      eosnStake += v.staked
+    }
+    let cafeStake = 0
+    for (const v of cafe) {
+      cafeStake += v.staked
+    }
+
+    console.log({
+      eosnStake: eosnStake,
+      eosnVoters: eosn.length,
+      cafeStake: cafeStake,
+      cafeVoters: cafe.length
+    })
   }
 
   @action async calcRewards() {
