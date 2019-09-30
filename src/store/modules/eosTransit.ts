@@ -188,8 +188,6 @@ export class EosTransitModule extends VuexModule {
       } catch (e) {
         console.log('auth error')
         throw e
-      } finally {
-        this.check
       }
     } catch (e) {
       console.log('connection error')
