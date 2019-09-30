@@ -19,6 +19,7 @@ export class CoreModule extends VuexModule {
     | { bp: number; interval: number; rex: number; total: number }
     | false = false
   @getter rewards: any[] = []
+  @getter proxies: any = []
 
   get userState() {
     if (!vxm.eosTransit.isAuthenticated) return 'auth'
@@ -34,11 +35,30 @@ export class CoreModule extends VuexModule {
     else {
       const user: any = vxm.eosTransit.userInfo
       if (user && user.voter_info) {
-        if (user.voter_info.proxy === 'proxy4nation') return true
+        if (
+          user.voter_info.proxy === 'proxy1nation' ||
+          user.voter_info.proxy === 'proxy2nation' ||
+          user.voter_info.proxy === 'proxy3nation' ||
+          user.voter_info.proxy === 'proxy4nation' ||
+          user.voter_info.proxy === 'proxy4nation'
+        )
+          return true
         else if (user.voter_info.proxy) return user.voter_info.proxy
         else return false
       } else return false
     }
+  }
+
+  get activeProxy() {
+    let proxy = ''
+    if (this.proxies.length) {
+      for (const p of this.proxies) {
+        if (p.active) {
+          return p.proxy
+        }
+      }
+    }
+    return false
   }
 
   @action async getSettings() {
@@ -61,6 +81,15 @@ export class CoreModule extends VuexModule {
       rex: settings.rows[0].rex,
       total: settings.rows[0].rex + settings.rows[0].rate
     })
+  }
+  @action async getProxies() {
+    const proxies = await vxm.eosTransit.accessContext.eosRpc.get_table_rows({
+      code: 'proxy4nation',
+      table: 'proxies',
+      scope: 'proxy4nation',
+      limit: 10
+    })
+    this.setProxies(proxies.rows)
   }
 
   @action async getVoters() {
@@ -97,7 +126,7 @@ export class CoreModule extends VuexModule {
     if (resp && resp.rows.length) {
       this.setUserSigned(resp.rows[0])
     }
-    // this.tmp()
+    this.tmp()
   }
 
   @action async tmp() {
@@ -105,7 +134,7 @@ export class CoreModule extends VuexModule {
       code: 'proxy4nation',
       table: 'voters',
       scope: 'proxy4nation',
-      limit: 410
+      limit: 800
     })
     let eosn = resp.rows.filter(
       (v: VotersTable) => v.referral === 'eosnationinc'
@@ -115,11 +144,11 @@ export class CoreModule extends VuexModule {
     )
     let eosnStake = 0
     for (const v of eosn) {
-      eosnStake += v.staked
+      eosnStake += parseFloat(v.staked)
     }
     let cafeStake = 0
     for (const v of cafe) {
-      cafeStake += v.staked
+      cafeStake += parseFloat(v.staked)
     }
 
     console.log({
@@ -178,7 +207,7 @@ export class CoreModule extends VuexModule {
         ],
         data: {
           voter: user,
-          proxy: 'proxy4nation',
+          proxy: this.activeProxy,
           producers: []
         }
       }
@@ -320,6 +349,10 @@ export class CoreModule extends VuexModule {
 
   @mutation setUserSigned(v: VotersTable | false) {
     this.userSignedUp = v
+  }
+
+  @mutation setProxies(p: any) {
+    this.proxies = p
   }
 
   // Get / Set Language from Browser/LocaleStorage

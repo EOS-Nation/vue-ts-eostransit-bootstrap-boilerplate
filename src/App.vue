@@ -29,7 +29,8 @@ import { WalletProvider } from 'eos-transit'
   }
 })
 export default class App extends Vue {
-  created() {
+  async created() {
+    await vxm.core.getProxies()
     const autoLogin = localStorage.getItem('autoLogin')
     if (autoLogin) {
       const provider = vxm.eosTransit.walletProviders.find(
