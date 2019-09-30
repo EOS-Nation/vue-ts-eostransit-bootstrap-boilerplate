@@ -41,7 +41,7 @@
         </b-col>
       </b-row>
       <b-row v-else key="loading" class="d-flex align-items-center">
-        <b-col class="text-center">
+        <b-col v-if="selectedProvider.id !== 'ledger'" class="text-center">
           <img
             class="img-avatar img-avatar-thumb cursor mb-2"
             :src="require('@/assets/img/' + providerLogoUrl(selectedProvider))"
@@ -49,6 +49,33 @@
           />
           <h3 class="mt-2">{{ selectedProvider.meta.name }}</h3>
           {{ loginStatus[0] }}
+        </b-col>
+        <b-col v-else class="text-center">
+          <img
+            class="img-avatar img-avatar-thumb cursor mb-2"
+            :src="require('@/assets/img/' + providerLogoUrl(selectedProvider))"
+            alt="Provider Logo"
+          />
+          <h3 class="mt-2">{{ selectedProvider.meta.name }}</h3>
+          <div v-if="!ledgerDiscovery">
+            Searching for accounts on your Ledger device...
+          </div>
+          <div v-else>
+            <h4>
+              <span class="text-capitalize">Choose Account</span>
+            </h4>
+            <template v-for="key in ledgerDiscovery">
+              <b-btn
+                variant="primary"
+                v-for="account in key.accounts"
+                :key="account.account"
+                class="btn-block mr-1"
+              >
+                <span class="font-w700">{{ account.account }}</span
+                >@{{ account.authorization }}
+              </b-btn>
+            </template>
+          </div>
         </b-col>
       </b-row>
     </transition>
@@ -72,6 +99,10 @@ export default class ModalLogin extends Vue {
 
   get selectedProvider() {
     return vxm.eosTransit.selectedProvider
+  }
+
+  get ledgerDiscovery() {
+    return vxm.eosTransit.discoveryData
   }
 
   get loginStatus() {

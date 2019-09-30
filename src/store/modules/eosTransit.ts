@@ -9,7 +9,8 @@ import {
   initAccessContext,
   WalletProvider,
   Wallet,
-  WalletState
+  WalletState,
+  DiscoveryData
 } from 'eos-transit'
 import scatter from 'eos-transit-scatter-provider'
 import lynx from 'eos-transit-lynx-provider'
@@ -46,7 +47,7 @@ export class EosTransitModule extends VuexModule {
       tp(),
       meetone(),
       whalevault(),
-      keycat(),
+      keycat()
       // simpleos(),
       // portisProvider({ DappId: '' })
     ]
@@ -76,6 +77,7 @@ export class EosTransitModule extends VuexModule {
 
   @getter wallet: Wallet | false = false
   @getter walletState: WalletState | false = false
+  @getter discoveryData: DiscoveryData | false = false
 
   get loginStatus() {
     const login = ['Login', 'arrow-right', false]
@@ -138,17 +140,35 @@ export class EosTransitModule extends VuexModule {
       // it does it right after connection, so this is more for the state tracking
       // and for WAL to fetch the EOS account data for us)
       try {
-        await wallet.login()
-        // wallet.authenticated === true
+        if (provider.id !== 'ledger') {
+          await wallet.login()
+          // wallet.authenticated === true
+          this.setWallet(wallet)
 
-        this.setWallet(wallet)
+          // Now that we have a wallet that is connected, logged in and have account data available,
+          // you can use it to sign transactions using the `eosjs` API instance that is automatically
+          // created and maintained by the wallet.
 
-        // Now that we have a wallet that is connected, logged in and have account data available,
-        // you can use it to sign transactions using the `eosjs` API instance that is automatically
-        // created and maintained by the wallet.
-
-        // set autologin
-        localStorage.setItem('autoLogin', provider.id)
+          // set autologin
+          localStorage.setItem('autoLogin', provider.id)
+        } else {
+          this.setWallet(wallet)
+          //start public key discovery for first index
+          let more = true
+          let i = 0
+          let data: DiscoveryData
+          while (more) {
+            data = await wallet.discover({
+              pathIndexList: [i]
+            })
+            console.log(data)
+            if (data && data.keyToAccountMap[i].accounts.length === 0) {
+              this.setDiscoveryData(data)
+              more = false
+            }
+            i++
+          }
+        }
       } catch (e) {
         console.log('auth error')
         throw e
@@ -179,6 +199,10 @@ export class EosTransitModule extends VuexModule {
 
   @mutation setWalletState(state: WalletState | false) {
     this.walletState = state
+  }
+
+  @mutation setDiscoveryData(d: DiscoveryData) {
+    this.discoveryData = d
   }
 }
 export const eosTransit = EosTransitModule.ExtractVuexModule(EosTransitModule)
