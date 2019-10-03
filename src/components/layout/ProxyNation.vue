@@ -8,7 +8,7 @@
       <br />
       <span @click="toggleTooltip" id="tooltip-apr">
         <font-awesome-icon icon="info-circle" class="font-size-base mb-1" />
-        APR {{ rate + rex }}%
+        APR {{ numeral(rate + rex).format('0.00') }}%
       </span>
       <b-tooltip
         :show.sync="tooltip"
@@ -19,9 +19,11 @@
           APR is calculated at the time of claim and is subject to change based
           on the amount of EOS proxied
           <hr class="text-muted my-2" />
-          <strong>Current APR:</strong> {{ rate + rex }}%
+          <strong>Current APR:</strong>
+          {{ numeral(rate + rex).format('0.00') }}%
           <br />
-          <strong>BP:</strong> {{ rate }}% + <strong>REX:</strong> {{ rex }}%
+          <strong>BP:</strong> {{ numeral(rate).format('0.00') }}% +
+          <strong>REX:</strong> {{ numeral(rex).format('0.00') }}%
         </div>
       </b-tooltip>
     </h2>
@@ -40,9 +42,11 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { vxm } from '@/store/'
+import numeral from 'numeral'
 
 @Component
 export default class ProxyNation extends Vue {
+  numeral = numeral
   tooltip = false
   get rate() {
     const rate = vxm.core.settings
