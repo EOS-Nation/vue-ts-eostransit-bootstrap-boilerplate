@@ -38,6 +38,20 @@
                 </h3>
               </div>
             </div>
+            <div class="d-flex justify-content-center align-items-center mx-2">
+              <img
+                src="@/assets/img/usdt-logo.png"
+                alt="Token Logo"
+                class="img-avatar img-avatar48 mx-2"
+              />
+              <div>
+                <h4 v-if="rewards" class="m-0 p-0">{{ rewards.usdt }}</h4>
+                <h4 v-else class="m-0 p-0">0.0000</h4>
+                <h3 class="m-0 p-0">
+                  USDT
+                </h3>
+              </div>
+            </div>
           </div>
           <h3 class="my-4">Thank you for supporting EOS Nation!</h3>
         </b-col>

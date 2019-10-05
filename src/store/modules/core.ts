@@ -168,12 +168,17 @@ export class CoreModule extends VuexModule {
         365 /
         (86400 / this.settings.interval)
     let eos = amount / 10000
-    let dapp = eos * this.rewards[1].multiplier
+    let dapp = eos * (this.rewards[1] ? this.rewards[1].multiplier : 1)
+    let usdt = eos * (this.rewards[2] ? this.rewards[2].multiplier : 1)
+
     if (eos < 0.0001) eos = 0.0001
     if (dapp < 0.0001) dapp = 0.0001
+    if (usdt < 0.0001) usdt = 0.0001
+
     return {
       eos: numeral(eos).format('0,0.0000'),
-      dapp: numeral(dapp).format('0,0.0000')
+      dapp: numeral(dapp).format('0,0.0000'),
+      usdt: numeral(usdt).format('0,0.0000')
     }
   }
 
