@@ -8,7 +8,7 @@
       <br />
       <span @click="toggleTooltip" id="tooltip-apr">
         <font-awesome-icon icon="info-circle" class="font-size-base mb-1" />
-        APR {{ numeral(rate + rex + (0.133) + (0.697)).format('0.00') }}%
+        APR {{ numeral(rate + 0.17 + (0.11) + (0.71)).format('0.00') }}%
       </span>
       <b-tooltip
         :show.sync="tooltip"
@@ -20,14 +20,14 @@
           on the amount of EOS proxied
           <hr class="text-muted my-2" />
           <strong>Current APR:</strong>
-          {{ numeral(rate + rex + 0.697 + 0.133).format('0.00') }}%
+          {{ numeral(rate + 0.17 + 0.71 + 0.11).format('0.00') }}%
           <br />
           <!-- USDT APR = 1 / USD * APR * Multiplier (ex: 1 / 3.01 * 2.10 * 1 = 0.697% )-->
           <!-- DAPP APR = DAPP/EOS * APR * Multiplier (ex: 0.006362 * 2.10 * 10 = 0.133% )-->
           <strong>EOS:</strong> {{ numeral(rate).format('0.00') }}%<br />
-          <strong>REX:</strong> {{ numeral(rex).format('0.00') }}%<br />
-          <strong>USDT:</strong> {{ numeral(0.697).format('0.00') }}%<br />
-          <strong>DAPP:</strong> {{ numeral(0.133).format('0.00') }}%
+          <strong>REX:</strong> {{ numeral(0.17).format('0.00') }}%<br />
+          <strong>USDT:</strong> {{ numeral(0.71).format('0.00') }}%<br />
+          <strong>DAPP:</strong> {{ numeral(0.11).format('0.00') }}%
         </div>
       </b-tooltip>
     </h2>
