@@ -78,8 +78,8 @@ export class CoreModule extends VuexModule {
     this.setSettings({
       interval: settings.rows[0].interval,
       bp: settings.rows[0].rate,
-      rex: settings.rows[0].rex,
-      total: settings.rows[0].rex + settings.rows[0].rate
+      rex: 17,
+      total: 17 + settings.rows[0].rate
     })
   }
   @action async getProxies() {

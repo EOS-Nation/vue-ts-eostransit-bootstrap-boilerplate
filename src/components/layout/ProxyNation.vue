@@ -8,7 +8,7 @@
       <br />
       <span @click="toggleTooltip" id="tooltip-apr">
         <font-awesome-icon icon="info-circle" class="font-size-base mb-1" />
-        APR {{ numeral(rate + 0.17 + (0.11) + (0.71)).format('0.00') }}%
+        APR {{ numeral(rate + 0.17 + 0.11 + 0.71).format('0.00') }}%
       </span>
       <b-tooltip
         :show.sync="tooltip"
