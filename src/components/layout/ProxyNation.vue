@@ -27,7 +27,8 @@
           <strong>EOS:</strong> {{ numeral(rate).format('0.00') }}%<br />
           <strong>REX:</strong> {{ numeral(0.17).format('0.00') }}%<br />
           <strong>USDT:</strong> {{ numeral(0.71).format('0.00') }}%<br />
-          <strong>DAPP:</strong> {{ numeral(0.11).format('0.00') }}%
+          <strong>DAPP:</strong> {{ numeral(0.11).format('0.00') }}%<br />
+          <strong>CPU:</strong> Bonus<br />
         </div>
       </b-tooltip>
     </h2>
