@@ -9,7 +9,7 @@
         alt="Token Logo"
         class="img-avatar img-avatar48 mx-2"
       />
-      <h3 class="text-white m-0 p-0 d-none">EOS</h3>
+      <h3 class="text-white m-0 p-0 desktop-only">EOS</h3>
     </div>
     <div class="d-flex justify-content-center align-items-center mx-2">
       <img
@@ -17,9 +17,9 @@
         alt="Token Logo"
         class="img-avatar img-avatar48 mx-2"
       />
-      <h3 class="text-white m-0 p-0">
-        <span class="d-none">DAPP</span>
-        <span v-if="rewards.length" class="d-none text-white-50 font-size-sm"
+      <h3 class="desktop-only text-white m-0 p-0">
+        DAPP
+        <span v-if="rewards.length" class="text-white-50 font-size-sm"
           >({{ rewards[1].multiplier }}x)</span
         >
       </h3>
@@ -30,9 +30,9 @@
         alt="Token Logo"
         class="img-avatar img-avatar48 mx-2"
       />
-      <h3 class="text-white m-0 p-0">
-        <span class="d-none">USDT</span>
-        <span v-if="rewards.length" class="d-none text-white-50 font-size-sm"
+      <h3 class="desktop-only text-white m-0 p-0">
+        USDT
+        <span v-if="rewards.length" class="text-white-50 font-size-sm"
           >({{ rewards[2].multiplier || 1 }}x)</span
         >
       </h3>
@@ -45,7 +45,7 @@
       />
       <h3 class="text-white m-0 p-0">
         CPU
-        <span v-if="rewards.length" class="d-none text-white-50 font-size-sm"
+        <span v-if="rewards.length" class="desktop-only text-white-50 font-size-sm"
           >(~4 EOS)</span
         >
       </h3>
@@ -68,4 +68,10 @@ export default class Rewards extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+@media screen and (max-width: 480px) {
+  .desktop-only {
+    display: none;
+  }
+}
+</style>
